@@ -1,181 +1,144 @@
 "use client";
 
-import { useRef } from "react";
+import { useRef, useMemo } from "react";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { Float, Sparkles, Ring, Sphere, Trail } from "@react-three/drei";
+import { Float, Sparkles, Trail } from "@react-three/drei";
 import * as THREE from "three";
 
-// --- Holographic Planet (Saturn-Style) ---
-const HolographicPlanet = () => {
-  const planetRef = useRef<THREE.Group>(null);
-  const ringRef = useRef<THREE.Mesh>(null);
+// --- Accretion Disk (Interstellar-style gravitational swirl) ---
+const AccretionDisk = () => {
+  const pointsRef = useRef<THREE.Points>(null);
+  const particleCount = 1500;
+
+  const [positions, rotationsSpeed, radii] = useMemo(() => {
+    const pos = new Float32Array(particleCount * 3);
+    const speeds = new Float32Array(particleCount);
+    const rads = new Float32Array(particleCount);
+
+    for (let i = 0; i < particleCount; i++) {
+      // Create a flat tilted disc of particles with a central gap (accretion disk)
+      const r = 1.8 + Math.random() * 4.5; // Radius between 1.8 and 6.3
+      const theta = Math.random() * Math.PI * 2;
+      
+      pos[i * 3] = Math.cos(theta) * r;
+      pos[i * 3 + 1] = (Math.random() - 0.5) * 0.12; // Extremely thin profile
+      pos[i * 3 + 2] = Math.sin(theta) * r;
+
+      // Keplerian-like orbit: closer particles rotate faster
+      speeds[i] = (0.25 + Math.random() * 0.25) / Math.pow(r, 0.5);
+      rads[i] = r;
+    }
+    return [pos, speeds, rads];
+  }, []);
 
   useFrame((state, delta) => {
-    if (planetRef.current) {
-      planetRef.current.rotation.y += delta * 0.1;
-      planetRef.current.rotation.x = Math.sin(state.clock.elapsedTime * 0.5) * 0.05;
-    }
-    if (ringRef.current) {
-      ringRef.current.rotation.z -= delta * 0.15;
+    if (pointsRef.current) {
+      const positionsAttr = pointsRef.current.geometry.attributes.position as THREE.BufferAttribute;
+      
+      for (let i = 0; i < particleCount; i++) {
+        let x = positionsAttr.getX(i);
+        let z = positionsAttr.getZ(i);
+        
+        let angle = Math.atan2(z, x);
+        angle += rotationsSpeed[i] * delta * 0.6; // Controlled slow orbit speed
+        
+        positionsAttr.setX(i, Math.cos(angle) * radii[i]);
+        positionsAttr.setZ(i, Math.sin(angle) * radii[i]);
+        
+        // Subtle ripple waves propagating outwards
+        positionsAttr.setY(i, Math.sin(state.clock.elapsedTime * 0.8 - radii[i] * 2) * 0.08);
+      }
+      positionsAttr.needsUpdate = true;
+      
+      // Gentle overall rotation
+      pointsRef.current.rotation.y = state.clock.elapsedTime * 0.01;
     }
   });
 
   return (
-    <group ref={planetRef} position={[-4, 2, -5]} rotation={[0.2, 0, 0.1]} scale={1.5}>
-      {/* Core Planet */}
-      <Sphere args={[1, 64, 64]}>
-        <meshStandardMaterial 
-          color="#1a0b2e" 
-          emissive="#7042f8" 
-          emissiveIntensity={0.2}
-          wireframe={true}
+    <group rotation={[0.5, 0.2, 0.3]} position={[0, 1.2, -3]}>
+      {/* Primary Accretion Ring */}
+      <points ref={pointsRef}>
+        <bufferGeometry>
+          <bufferAttribute
+            attach="attributes-position"
+            args={[positions, 3]}
+          />
+        </bufferGeometry>
+        <pointsMaterial
+          size={0.025}
+          color="#b49bff"
           transparent
-          opacity={0.3}
-        />
-      </Sphere>
-      
-      {/* Inner Glowing Atmosphere */}
-      <Sphere args={[0.95, 32, 32]}>
-        <meshBasicMaterial color="#b49bff" transparent opacity={0.5} />
-      </Sphere>
-
-      {/* Outer Rings */}
-      <mesh ref={ringRef} rotation={[Math.PI / 1.8, 0, 0]}>
-        <ringGeometry args={[1.4, 2, 64]} />
-        <meshStandardMaterial 
-          color="#b49bff" 
-          emissive="#e59cff" 
-          emissiveIntensity={0.5} 
-          side={THREE.DoubleSide} 
-          transparent 
           opacity={0.4}
+          sizeAttenuation
+          depthWrite={false}
+          blending={THREE.AdditiveBlending}
         />
+      </points>
+      
+      {/* Core Gravitational Glow */}
+      <mesh position={[0, 0, 0]}>
+        <sphereGeometry args={[1.5, 32, 32]} />
+        <meshBasicMaterial color="#110729" transparent opacity={0.8} />
       </mesh>
       
-      {/* Orbital Particles */}
-      <Sparkles count={100} scale={3} size={2} color="#e59cff" speed={0.5} opacity={0.6} />
+      {/* Intense Inner Accretion Sparkles */}
+      <Sparkles count={150} scale={3.5} size={2.5} color="#e59cff" speed={0.4} opacity={0.5} />
     </group>
   );
 };
 
-// --- Stylized Futuristic Astronaut ---
-// Since we don't have a 3D model, we create a high-quality abstract humanoid shape
-// representing a futuristic astronaut using glowing geometric elements.
-const StylizedAstronaut = () => {
-  const astronautRef = useRef<THREE.Group>(null);
-
-  useFrame((state) => {
-    if (astronautRef.current) {
-      // Smooth mouse parallax
-      astronautRef.current.position.x = THREE.MathUtils.lerp(astronautRef.current.position.x, state.pointer.x * 1.5 + 2, 0.05);
-      astronautRef.current.position.y = THREE.MathUtils.lerp(astronautRef.current.position.y, state.pointer.y * 1.5, 0.05);
-      
-      // Idle rotation
-      astronautRef.current.rotation.y = Math.sin(state.clock.elapsedTime * 0.3) * 0.2 - 0.5;
-      astronautRef.current.rotation.x = Math.cos(state.clock.elapsedTime * 0.2) * 0.1;
-    }
-  });
-
-  return (
-    <Float speed={2} rotationIntensity={0.3} floatIntensity={2}>
-      <group ref={astronautRef} position={[2, 0, 0]} scale={0.8}>
-        {/* Helmet */}
-        <mesh position={[0, 1.2, 0]}>
-          <sphereGeometry args={[0.4, 32, 32]} />
-          <meshPhysicalMaterial 
-            color="#ffffff" 
-            metalness={0.9} 
-            roughness={0.1}
-            clearcoat={1}
-            clearcoatRoughness={0.1}
-          />
-        </mesh>
-        {/* Visor */}
-        <mesh position={[0, 1.2, 0.28]} rotation={[-0.2, 0, 0]}>
-          <boxGeometry args={[0.5, 0.3, 0.3]} />
-          <meshStandardMaterial color="#000000" metalness={1} roughness={0} emissive="#7042f8" emissiveIntensity={0.5} />
-        </mesh>
-
-        {/* Torso */}
-        <mesh position={[0, 0.2, 0]}>
-          <capsuleGeometry args={[0.35, 0.7, 16, 32]} />
-          <meshPhysicalMaterial color="#e0e0e0" metalness={0.5} roughness={0.5} />
-        </mesh>
-
-        {/* Backpack */}
-        <mesh position={[0, 0.3, -0.3]}>
-          <boxGeometry args={[0.5, 0.8, 0.3]} />
-          <meshStandardMaterial color="#c0c0c0" metalness={0.8} roughness={0.4} />
-        </mesh>
-
-        {/* Arms */}
-        <mesh position={[-0.5, 0.2, 0]} rotation={[0, 0, 0.3]}>
-          <capsuleGeometry args={[0.15, 0.6, 16, 16]} />
-          <meshPhysicalMaterial color="#ffffff" metalness={0.6} roughness={0.4} />
-        </mesh>
-        <mesh position={[0.5, 0.2, 0]} rotation={[0, 0, -0.3]}>
-          <capsuleGeometry args={[0.15, 0.6, 16, 16]} />
-          <meshPhysicalMaterial color="#ffffff" metalness={0.6} roughness={0.4} />
-        </mesh>
-
-        {/* Legs */}
-        <mesh position={[-0.2, -0.7, 0]}>
-          <capsuleGeometry args={[0.18, 0.6, 16, 16]} />
-          <meshPhysicalMaterial color="#ffffff" metalness={0.6} roughness={0.4} />
-        </mesh>
-        <mesh position={[0.2, -0.7, 0]}>
-          <capsuleGeometry args={[0.18, 0.6, 16, 16]} />
-          <meshPhysicalMaterial color="#ffffff" metalness={0.6} roughness={0.4} />
-        </mesh>
-
-        {/* Ambient Aura */}
-        <Sparkles count={40} scale={2} size={3} color="#7042f8" speed={1} opacity={0.4} />
-      </group>
-    </Float>
-  );
-};
-
-// --- Floating Satellite ---
+// --- Floating Satellite / Space Station (Refined & Subtle) ---
 const FloatingSatellite = () => {
   const satRef = useRef<THREE.Group>(null);
+  const blinkingLightRef = useRef<THREE.Mesh>(null);
 
   useFrame((state, delta) => {
     if (satRef.current) {
-      // Orbital movement
-      const t = state.clock.elapsedTime * 0.2;
-      satRef.current.position.x = Math.sin(t) * 5;
-      satRef.current.position.z = Math.cos(t) * 3 - 2;
-      satRef.current.position.y = Math.sin(t * 1.5) * 1 + 2;
+      // Extremely smooth orbital movement
+      const t = state.clock.elapsedTime * 0.08;
+      satRef.current.position.x = Math.sin(t * 1.2) * 6 + 1;
+      satRef.current.position.z = Math.cos(t) * 4 - 3;
+      satRef.current.position.y = Math.sin(t * 0.8) * 1.5 + 1;
       
-      // Self rotation
-      satRef.current.rotation.x += delta * 0.2;
-      satRef.current.rotation.y += delta * 0.3;
+      // Elegant micro-rotations
+      satRef.current.rotation.x += delta * 0.08;
+      satRef.current.rotation.y += delta * 0.12;
+      satRef.current.rotation.z += delta * 0.04;
+    }
+
+    // Blinking navigation light
+    if (blinkingLightRef.current) {
+      const isLit = Math.floor(state.clock.elapsedTime * 2.5) % 2 === 0;
+      blinkingLightRef.current.visible = isLit;
     }
   });
 
   return (
-    <group ref={satRef} scale={0.3}>
-      <Trail width={0.5} length={4} color="#e59cff" attenuation={(t) => t * t}>
+    <group ref={satRef} scale={0.16}>
+      <Trail width={0.3} length={6} color="#7042f8" attenuation={(t) => t * t}>
         <mesh>
-          <boxGeometry args={[1, 0.2, 0.2]} />
-          <meshStandardMaterial color="#a0a0a0" metalness={0.9} roughness={0.1} />
+          <boxGeometry args={[1.2, 0.18, 0.18]} />
+          <meshStandardMaterial color="#3a2b58" metalness={0.9} roughness={0.1} />
         </mesh>
       </Trail>
       
-      {/* Solar Panels */}
-      <mesh position={[0, 0.5, 0]}>
-        <boxGeometry args={[0.1, 1, 0.5]} />
-        <meshStandardMaterial color="#2A0E61" metalness={0.5} emissive="#7042f8" emissiveIntensity={0.2} />
+      {/* Solar Panel Wing A */}
+      <mesh position={[0, 0.45, 0]}>
+        <boxGeometry args={[0.08, 0.7, 0.45]} />
+        <meshStandardMaterial color="#1a0e36" metalness={0.7} emissive="#7042f8" emissiveIntensity={0.15} />
       </mesh>
-      <mesh position={[0, -0.5, 0]}>
-        <boxGeometry args={[0.1, 1, 0.5]} />
-        <meshStandardMaterial color="#2A0E61" metalness={0.5} emissive="#7042f8" emissiveIntensity={0.2} />
+      
+      {/* Solar Panel Wing B */}
+      <mesh position={[0, -0.45, 0]}>
+        <boxGeometry args={[0.08, 0.7, 0.45]} />
+        <meshStandardMaterial color="#1a0e36" metalness={0.7} emissive="#7042f8" emissiveIntensity={0.15} />
       </mesh>
 
-      {/* Blinking Light */}
-      <mesh position={[0.6, 0, 0]}>
-        <sphereGeometry args={[0.05, 8, 8]} />
-        <meshBasicMaterial color="#ff0000" />
+      {/* Futuristic Blinking Beacon Light */}
+      <mesh ref={blinkingLightRef} position={[0.7, 0, 0]}>
+        <sphereGeometry args={[0.06, 8, 8]} />
+        <meshBasicMaterial color="#00ffcc" />
       </mesh>
     </group>
   );
@@ -184,15 +147,14 @@ const FloatingSatellite = () => {
 export const SpaceSceneCanvas = () => {
   return (
     <div className="absolute inset-0 w-full h-full z-[15] pointer-events-none hidden md:block">
-      <Canvas camera={{ position: [0, 0, 8], fov: 45 }}>
-        <fog attach="fog" args={["#030014", 5, 20]} />
-        <ambientLight intensity={0.4} />
-        <directionalLight position={[10, 10, 5]} intensity={1.5} color="#b49bff" />
-        <directionalLight position={[-10, -10, -5]} intensity={0.5} color="#e59cff" />
-        <pointLight position={[2, 0, 2]} intensity={2} color="#7042f8" distance={5} />
+      <Canvas camera={{ position: [0, 0, 7], fov: 45 }}>
+        <fog attach="fog" args={["#030014", 4, 15]} />
+        <ambientLight intensity={0.25} />
+        <directionalLight position={[5, 10, 3]} intensity={1.2} color="#b49bff" />
+        <directionalLight position={[-5, -10, -3]} intensity={0.4} color="#e59cff" />
+        <pointLight position={[0, 1.2, -3]} intensity={2.5} color="#7042f8" distance={8} />
         
-        <HolographicPlanet />
-        <StylizedAstronaut />
+        <AccretionDisk />
         <FloatingSatellite />
       </Canvas>
     </div>
