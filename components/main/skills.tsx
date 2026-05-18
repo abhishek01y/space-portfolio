@@ -5,21 +5,21 @@ import {
   SiReact, 
   SiNextdotjs, 
   SiTypescript, 
+  SiJavascript,
   SiTailwindcss, 
   SiFramer, 
   SiThreedotjs, 
   SiSpring, 
   SiMysql, 
   SiMongodb, 
-  SiFirebase, 
   SiGit, 
   SiGithub, 
   SiVercel, 
   SiPostman, 
-  SiDocker 
+  SiNodedotjs,
+  SiExpress
 } from "react-icons/si";
-import { FaJava, FaCloud } from "react-icons/fa6";
-import { TbApi } from "react-icons/tb";
+import { FaCloud } from "react-icons/fa6";
 import { VscCode } from "react-icons/vsc";
 
 const SKILL_CATEGORIES = [
@@ -31,9 +31,10 @@ const SKILL_CATEGORIES = [
       { name: "React", icon: SiReact, color: "#61DAFB" },
       { name: "Next.js", icon: SiNextdotjs, color: "#FFFFFF" },
       { name: "TypeScript", icon: SiTypescript, color: "#3178C6" },
+      { name: "JavaScript", icon: SiJavascript, color: "#F7DF1E" },
       { name: "Tailwind CSS", icon: SiTailwindcss, color: "#06B6D4" },
-      { name: "Framer Motion", icon: SiFramer, color: "#E10098" },
       { name: "Three.js", icon: SiThreedotjs, color: "#FFFFFF" },
+      { name: "Framer Motion", icon: SiFramer, color: "#E10098" },
     ]
   },
   {
@@ -41,9 +42,9 @@ const SKILL_CATEGORIES = [
     accent: "from-purple-500 to-pink-500",
     glow: "rgba(168, 85, 247, 0.2)",
     skills: [
-      { name: "Java", icon: FaJava, color: "#ED8B00" },
+      { name: "Node.js", icon: SiNodedotjs, color: "#339933" },
+      { name: "Express.js", icon: SiExpress, color: "#FFFFFF" },
       { name: "Spring Boot", icon: SiSpring, color: "#6DB33F" },
-      { name: "REST APIs", icon: TbApi, color: "#00F5D4" },
     ]
   },
   {
@@ -51,9 +52,8 @@ const SKILL_CATEGORIES = [
     accent: "from-emerald-500 to-teal-500",
     glow: "rgba(16, 185, 129, 0.2)",
     skills: [
-      { name: "MySQL", icon: SiMysql, color: "#00758F" },
       { name: "MongoDB", icon: SiMongodb, color: "#47A248" },
-      { name: "Firebase", icon: SiFirebase, color: "#FFCA28" },
+      { name: "MySQL", icon: SiMysql, color: "#00758F" },
     ]
   },
   {
@@ -67,7 +67,6 @@ const SKILL_CATEGORIES = [
       { name: "Render", icon: FaCloud, color: "#46E3B7" },
       { name: "VS Code", icon: VscCode, color: "#007ACC" },
       { name: "Postman", icon: SiPostman, color: "#FF6C37" },
-      { name: "Docker", icon: SiDocker, color: "#2496ED" },
     ]
   }
 ];
