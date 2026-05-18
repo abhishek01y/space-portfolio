@@ -6,8 +6,9 @@ import {
   type PointsInstancesProps,
 } from "@react-three/drei";
 import { Canvas, useFrame } from "@react-three/fiber";
-import { useMemo, useRef, Suspense } from "react";
+import { useMemo, useRef, Suspense, useState } from "react";
 import type { Points as PointsType, Mesh as MeshType } from "three";
+import * as THREE from "three";
 
 const createStarField = (count: number, radius: number) => {
   const positions = new Float32Array(count * 3);
@@ -74,32 +75,83 @@ export const StarBackground = (props: PointsInstancesProps) => {
   );
 };
 
-export const ShootingStar = ({ speed = 2, delay = 0, color = "#ffffff" }) => {
-  const meshRef = useRef<MeshType>(null);
-  const time = useRef(delay);
-  
-  useFrame((_state, delta) => {
-    time.current -= delta;
-    if (time.current > 0) return;
+export const ShootingStar = ({ color = "#ffffff" }) => {
+  const [star, setStar] = useState(() => resetStar());
 
-    if (meshRef.current) {
-      meshRef.current.position.x -= delta * speed;
-      meshRef.current.position.y -= delta * speed;
-      
-      if (meshRef.current.position.x < -3 || meshRef.current.position.y < -3) {
-        meshRef.current.position.x = 2 + Math.random() * 2;
-        meshRef.current.position.y = 2 + Math.random() * 2;
-        meshRef.current.position.z = Math.random() * 2 - 1;
-        time.current = Math.random() * 5 + 2; // Wait 2-7 seconds before next shot
+  function resetStar() {
+    const angle = Math.PI * 1.25 + (Math.random() - 0.5) * 0.4; // Diagonal down-left trajectory
+    const length = 3.5 + Math.random() * 2.0;
+    
+    // Spread starting coordinates
+    const startX = 1.0 + Math.random() * 2.0;
+    const startY = 1.0 + Math.random() * 2.0;
+    const startZ = -0.5 + Math.random() * 1.0;
+    
+    const speed = 0.6 + Math.random() * 0.9;
+    const size = 0.002 + Math.random() * 0.003;
+    const delay = Math.random() * 10; // Sparkle timing delay
+
+    return {
+      startX,
+      startY,
+      startZ,
+      dx: Math.cos(angle) * length,
+      dy: Math.sin(angle) * length,
+      speed,
+      size,
+      angle,
+      progress: -delay,
+    };
+  }
+
+  useFrame((_state, delta) => {
+    setStar((prev) => {
+      const nextProgress = prev.progress + delta * prev.speed;
+      if (nextProgress > 1.0) {
+        return resetStar();
       }
-    }
+      return { ...prev, progress: nextProgress };
+    });
   });
 
+  const { currentPos, opacity } = useMemo(() => {
+    if (star.progress < 0) {
+      return { currentPos: new THREE.Vector3(999, 999, 999), opacity: 0 };
+    }
+
+    const x = star.startX + star.dx * star.progress;
+    const y = star.startY + star.dy * star.progress;
+    const z = star.startZ;
+
+    // Organic fade-in and fade-out envelope
+    let op = 0;
+    if (star.progress < 0.2) {
+      op = star.progress / 0.2; // Fade-in
+    } else if (star.progress > 0.8) {
+      op = (1.0 - star.progress) / 0.2; // Fade-out
+    } else {
+      op = 1.0;
+    }
+
+    return {
+      currentPos: new THREE.Vector3(x, y, z),
+      opacity: op * 0.7,
+    };
+  }, [star]);
+
   return (
-    <mesh ref={meshRef} position={[5, 5, 0]}>
-      <sphereGeometry args={[0.003, 8, 8]} />
-      <meshBasicMaterial color={color} />
-      <pointLight color={color} intensity={0.5} distance={0.5} />
+    <mesh 
+      position={currentPos} 
+      rotation={[0, 0, star.angle + Math.PI / 2]}
+    >
+      {/* Elongated cylinder creates a highly realistic visual light trail */}
+      <cylinderGeometry args={[0, star.size, 0.25, 6]} />
+      <meshBasicMaterial 
+        color={color} 
+        transparent 
+        opacity={opacity} 
+        blending={THREE.AdditiveBlending}
+      />
     </mesh>
   );
 };
@@ -121,9 +173,12 @@ export const StarsCanvas = () => (
       <Suspense fallback={null}>
         <NebulaCloud />
         <StarBackground />
-        <ShootingStar speed={1.5} delay={0} color="#ffffff" />
-        <ShootingStar speed={2.5} delay={3} color="#b49bff" />
-        <ShootingStar speed={3.0} delay={6} color="#e59cff" />
+        <ShootingStar color="#ffffff" />
+        <ShootingStar color="#b49bff" />
+        <ShootingStar color="#e59cff" />
+        <ShootingStar color="#ffffff" />
+        <ShootingStar color="#7042f8" />
+        <ShootingStar color="#b49bff" />
       </Suspense>
     </Canvas>
   </div>
