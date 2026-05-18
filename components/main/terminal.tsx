@@ -5,8 +5,8 @@ import { useEffect, useState } from "react";
 
 const commands = [
   { cmd: "whoami", output: "Abhishek Yadav" },
-  { cmd: "skills", output: "Next.js, React, TypeScript, Java, Spring Boot, PostgreSQL, MongoDB, AI Systems" },
-  { cmd: "currently_building", output: "Immersive full stack applications with cinematic 3D web experiences" },
+  { cmd: "skills", output: "Next.js, React, TypeScript, Node.js, Express.js, Spring Boot, MySQL, MongoDB" },
+  { cmd: "currently_building", output: "Responsive full stack applications and highly interactive modern web experiences" },
 ];
 
 export const Terminal = () => {

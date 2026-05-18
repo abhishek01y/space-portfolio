@@ -1,6 +1,5 @@
 import { About } from "@/components/main/about";
 import { Contact } from "@/components/main/contact";
-import { Encryption } from "@/components/main/encryption";
 import { EventHorizon } from "@/components/main/event-horizon";
 import { Hero } from "@/components/main/hero";
 import { MissionControl } from "@/components/main/mission-control";
@@ -23,7 +22,6 @@ export default function Home() {
         <Timeline />
         <Skills />
         <EventHorizon />
-        <Encryption />
         <Projects />
         <GithubStats />
         <Resume />
