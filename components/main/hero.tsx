@@ -1,4 +1,5 @@
 import { HeroContent } from "@/components/sub/hero-content";
+import { RocketCanvas } from "@/components/main/rocket";
 
 export const Hero = () => {
   return (
@@ -14,6 +15,7 @@ export const Hero = () => {
         <source src="/videos/blackhole.webm" type="video/webm" />
       </video>
 
+      <RocketCanvas />
       <HeroContent />
     </div>
   );

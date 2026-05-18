@@ -6,6 +6,8 @@ import { Footer } from "@/components/main/footer";
 import { Navbar } from "@/components/main/navbar";
 import { CosmicCursor } from "@/components/main/cosmic-cursor";
 import { StarsCanvas } from "@/components/main/star-background";
+import { ScrollProgress } from "@/components/main/scroll-progress";
+import { KeyboardEasterEgg } from "@/components/main/keyboard-easter-egg";
 import { siteConfig } from "@/config";
 import { cn } from "@/lib/utils";
 
@@ -28,8 +30,10 @@ export default function RootLayout({ children }: PropsWithChildren) {
           inter.className
         )}
       >
+        <ScrollProgress />
         <StarsCanvas />
         <CosmicCursor />
+        <KeyboardEasterEgg />
         <Navbar />
         {children}
         <Footer />
