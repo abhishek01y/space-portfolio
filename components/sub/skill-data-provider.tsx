@@ -38,8 +38,10 @@ export const SkillDataProvider = ({
       animate={inView ? "visible" : "hidden"}
       custom={index}
       transition={{ delay: index * animationDelay }}
+      whileHover={{ scale: 1.15, rotate: 5 }}
+      className="cursor-pointer drop-shadow-[0_0_10px_rgba(255,255,255,0.1)] hover:drop-shadow-[0_0_15px_rgba(112,66,248,0.5)] transition-all"
     >
-      <Image src={`/skills/${src}`} width={width} height={height} alt={name} />
+      <Image src={`/skills/${src}`} width={width} height={height} alt={name} className="pointer-events-none" />
     </motion.div>
   );
 };

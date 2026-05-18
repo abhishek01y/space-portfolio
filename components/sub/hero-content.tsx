@@ -72,27 +72,28 @@ export const HeroContent = () => {
 
         <motion.div
           variants={slideInFromLeft(1)}
-          className="flex flex-col sm:flex-row items-center gap-4 justify-center lg:justify-start mt-2"
+          className="flex flex-col sm:flex-row flex-wrap items-center gap-4 justify-center lg:justify-start mt-4"
         >
           <Link
             href="#projects"
-            className="py-3 px-8 button-primary text-center text-white cursor-pointer rounded-lg w-full sm:w-auto font-medium transition-all hover:scale-105 active:scale-95 border border-transparent hover:border-[#7042f88b]"
+            className="py-3 px-8 button-primary text-center text-white cursor-pointer rounded-lg w-full sm:w-auto font-medium transition-all hover:scale-105 active:scale-95 border border-transparent hover:border-[#7042f88b] shadow-[0_0_15px_rgba(113,47,255,0.15)] hover:shadow-[0_0_25px_rgba(113,47,255,0.3)]"
           >
             View Projects
           </Link>
           <Link
             href="/resume.pdf"
             target="_blank"
-            className="py-3 px-8 text-center text-white cursor-pointer rounded-lg w-full sm:w-auto font-medium transition-all hover:bg-white/10 active:scale-95 border border-[#7042f88b] bg-[#030014]/50 backdrop-blur-md"
+            className="py-3 px-8 text-center text-white cursor-pointer rounded-lg w-full sm:w-auto font-medium transition-all hover:bg-[#1a0b2e] active:scale-95 border border-[#7042f8] bg-[#030014]/50 backdrop-blur-md shadow-[0_0_10px_rgba(113,47,255,0.2)] hover:shadow-[0_0_20px_rgba(113,47,255,0.4)] hover:text-[#b49bff]"
+          >
+            View Resume
+          </Link>
+          <a
+            href="/resume.pdf"
+            download="Abhishek_Yadav_Resume.pdf"
+            className="py-3 px-8 text-center text-white cursor-pointer rounded-lg w-full sm:w-auto font-medium transition-all hover:bg-gradient-to-r hover:from-[#7042f8]/30 hover:to-[#b49bff]/30 active:scale-95 border border-[#b49bff] bg-[#030014]/50 backdrop-blur-md shadow-[0_0_10px_rgba(180,155,255,0.2)] hover:shadow-[0_0_20px_rgba(180,155,255,0.4)]"
           >
             Download Resume
-          </Link>
-          <Link
-            href="#contact"
-            className="py-3 px-8 text-center text-white cursor-pointer rounded-lg w-full sm:w-auto font-medium transition-all hover:text-[#b49bff] hover:underline underline-offset-4"
-          >
-            Contact Me
-          </Link>
+          </a>
         </motion.div>
       </div>
 

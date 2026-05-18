@@ -17,7 +17,8 @@ export const Projects = () => {
             src={project.image}
             title={project.title}
             description={project.description}
-            link={project.link}
+            githubLink={"githubLink" in project ? project.githubLink : undefined}
+            demoLink={"demoLink" in project ? project.demoLink : undefined}
             techStack={project.techStack}
             highlights={project.highlights}
           />

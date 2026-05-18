@@ -15,10 +15,10 @@ export const About = () => {
             Passionate about building scalable and intelligent systems.
           </h2>
           <p className="mt-6 max-w-xl text-base leading-8 text-gray-400">
-            I am a Computer Science Engineering student at Chandigarh University with a strong interest in full stack development, backend engineering, AI systems, and scalable application architecture. I enjoy building real-world products that combine clean UI, efficient backend systems, and intelligent automation.
+            Hi, I'm Abhishek—a developer who thrives on turning complex problems into elegant, user-centric solutions. With a deep passion for full stack development and AI, I build digital experiences that are not just functional, but inherently scalable and intuitive.
           </p>
           <p className="mt-4 max-w-xl text-base leading-8 text-gray-400">
-            My experience includes developing AI-powered platforms, REST APIs, analytics systems, and scalable web applications using modern technologies such as Next.js, React, FastAPI, Spring Boot, Node.js, MongoDB, and PostgreSQL.
+            Currently, I'm focused on crafting modern web applications using <span className="text-[#b49bff]">Next.js, React, Node.js,</span> and <span className="text-[#b49bff]">TypeScript</span>. I genuinely enjoy exploring backend architectures and integrating intelligent systems. What motivates me most is seeing the tangible impact of well-written code on real users.
           </p>
         </div>
 

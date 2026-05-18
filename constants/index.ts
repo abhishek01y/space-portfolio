@@ -59,7 +59,8 @@ export const PROJECTS = [
     title: "SafeRoute AI",
     description: "AI-powered urban safety platform delivering real-time safety scores using crowd reports, news sentiment analysis, and live location data.",
     image: "/projects/project-1.png",
-    link: "https://safe-route-brown.vercel.app/",
+    demoLink: "https://safe-route-brown.vercel.app/",
+    githubLink: "https://github.com/abhishek01y/SafeRoute-AI",
     techStack: ["Next.js 14", "FastAPI", "Node.js", "Supabase", "PostgreSQL", "Mapbox GL JS"],
     highlights: ["Real-time safety scores", "Crowd-sourced reports", "News sentiment analysis", "Live location data"]
   },
@@ -67,7 +68,7 @@ export const PROJECTS = [
     title: "Resource & Skill Management System",
     description: "Full-stack employee skill tracking and ranking platform with analytics dashboard and automated scoring engine.",
     image: "/projects/project-2.png",
-    link: "https://github.com/abhishek01y/skill-management-manager",
+    githubLink: "https://github.com/abhishek01y/skill-management-manager",
     techStack: ["Java", "Spring Boot", "MongoDB Atlas", "React.js"],
     highlights: ["Employee skill tracking", "Ranking platform", "Analytics dashboard", "Automated scoring engine"]
   }

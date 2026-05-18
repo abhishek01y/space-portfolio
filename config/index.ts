@@ -4,6 +4,7 @@ export const siteConfig: Metadata = {
   title: "Abhishek Yadav | Software Developer",
   description:
     "Portfolio of Abhishek Yadav, a Computer Science Engineering student and Software Developer specializing in full stack web development, AI integration, and scalable backend architecture.",
+  metadataBase: new URL("https://space-portfolio-sepia-eight.vercel.app/"),
   keywords: [
     "Abhishek Yadav",
     "Abhishek",
@@ -41,5 +42,11 @@ export const siteConfig: Metadata = {
     ],
     locale: "en_US",
     type: "website",
+  },
+  twitter: {
+    card: "summary_large_image",
+    title: "Abhishek Yadav | Software Developer",
+    description: "Portfolio of Abhishek Yadav, a Computer Science Engineering student and Software Developer.",
+    images: ["/logo.png"],
   },
 } as const;
