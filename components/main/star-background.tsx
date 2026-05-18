@@ -88,9 +88,9 @@ export const Comet = ({ color = "#ffffff" }) => {
     const startY = 1.2 + Math.random() * 1.8;
     const startZ = -0.5 + Math.random() * 1.0;
     
-    const speed = 0.35 + Math.random() * 0.55; // Slower, majestic orbital velocity
+    const speed = 0.06 + Math.random() * 0.08; // Significantly slower, majestic orbital velocity (takes ~10-15s to cross)
     const size = 0.003 + Math.random() * 0.004;
-    const delay = Math.random() * 15 + 5; // Comets are rare and special! (5-20s spawn spacing)
+    const delay = Math.random() * 12 + 4; // Comets are rare, special, and majestic (4-16s spawn spacing)
 
     return {
       startX,
@@ -123,12 +123,12 @@ export const Comet = ({ color = "#ffffff" }) => {
     const y = comet.startY + comet.dy * comet.progress;
     const z = comet.startZ;
 
-    // Fluid fade-in and fade-out envelope
+    // Smoother fade-in and fade-out envelope
     let op = 0;
-    if (comet.progress < 0.15) {
-      op = comet.progress / 0.15;
-    } else if (comet.progress > 0.85) {
-      op = (1.0 - comet.progress) / 0.15;
+    if (comet.progress < 0.25) {
+      op = comet.progress / 0.25; // 25% smooth fade-in
+    } else if (comet.progress > 0.75) {
+      op = (1.0 - comet.progress) / 0.25; // 25% smooth fade-out
     } else {
       op = 1.0;
     }
@@ -143,8 +143,8 @@ export const Comet = ({ color = "#ffffff" }) => {
 
   return (
     <Trail
-      width={0.6}
-      length={10}
+      width={0.7}
+      length={28} // Extended tail history for extremely long, elegant volumetric trail
       color={color}
       attenuation={(t) => t * t} // Tapered volumetric trail fade
     >
@@ -156,8 +156,8 @@ export const Comet = ({ color = "#ffffff" }) => {
           opacity={opacity * 0.8} 
           blending={THREE.AdditiveBlending}
         />
-        {/* Soft atmospheric glow light */}
-        <pointLight color={color} intensity={1.5} distance={1.0} />
+        {/* Rich atmospheric glowing halo light */}
+        <pointLight color={color} intensity={2.0} distance={1.5} />
       </mesh>
     </Trail>
   );
