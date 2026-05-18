@@ -81,16 +81,16 @@ export const Comet = ({ color = "#ffffff" }) => {
 
   function resetComet() {
     const angle = Math.PI * 1.25 + (Math.random() - 0.5) * 0.3; // Elegant diagonal trajectory
-    const length = 4.5 + Math.random() * 2.0;
+    const length = 1.0 + Math.random() * 1.2; // Shorter path segments
     
-    // Starting positions (spread off-screen)
-    const startX = 1.2 + Math.random() * 1.8;
-    const startY = 1.2 + Math.random() * 1.8;
-    const startZ = -0.5 + Math.random() * 1.0;
+    // Spread starting coordinates (localized offsets)
+    const startX = 0.4 + Math.random() * 1.4;
+    const startY = 0.4 + Math.random() * 1.4;
+    const startZ = -0.5 + Math.random() * 0.8;
     
-    const speed = 0.06 + Math.random() * 0.08; // Significantly slower, majestic orbital velocity (takes ~10-15s to cross)
-    const size = 0.003 + Math.random() * 0.004;
-    const delay = Math.random() * 12 + 4; // Comets are rare, special, and majestic (4-16s spawn spacing)
+    const speed = 0.18 + Math.random() * 0.18; // Medium-slow elegant motion
+    const size = 0.0006 + Math.random() * 0.0008; // Extremely small, subtle heads
+    const delay = Math.random() * 8 + 3; // Occasional appearances (3-11s spawn spacing)
 
     return {
       startX,
@@ -143,21 +143,21 @@ export const Comet = ({ color = "#ffffff" }) => {
 
   return (
     <Trail
-      width={0.7}
-      length={28} // Extended tail history for extremely long, elegant volumetric trail
+      width={0.06} // Super thin trail
+      length={8} // Shorter history for discrete elegant streak
       color={color}
-      attenuation={(t) => t * t} // Tapered volumetric trail fade
+      attenuation={(t) => t * t}
     >
       <mesh position={currentPos}>
         <sphereGeometry args={[comet.size, 8, 8]} />
         <meshBasicMaterial 
           color={color} 
           transparent 
-          opacity={opacity * 0.8} 
+          opacity={opacity * 0.35} // Extremely soft, whisper-like presence
           blending={THREE.AdditiveBlending}
         />
-        {/* Rich atmospheric glowing halo light */}
-        <pointLight color={color} intensity={2.0} distance={1.5} />
+        {/* Soft, minimal glowing halo */}
+        <pointLight color={color} intensity={0.3} distance={0.4} />
       </mesh>
     </Trail>
   );
