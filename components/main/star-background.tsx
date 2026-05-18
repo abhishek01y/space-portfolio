@@ -115,7 +115,7 @@ export const NebulaCloud = () => {
 };
 
 export const StarsCanvas = () => (
-  <div className="w-full h-auto fixed inset-0 -z-10 pointer-events-none bg-[radial-gradient(ellipse_at_center,_var(--tw-gradient-stops))] from-[#110729] via-[#030014] to-[#010005]">
+  <div className="w-full h-auto fixed inset-0 -z-10 pointer-events-none">
     <Canvas camera={{ position: [0, 0, 1] }}>
       <fog attach="fog" args={["#030014", 0.5, 2.5]} />
       <Suspense fallback={null}>
