@@ -6,52 +6,12 @@ import {
   RxLinkedinLogo,
 } from "react-icons/rx";
 
-export const SKILL_DATA = [
-  { skill_name: "React.js", image: "react.png", width: 80, height: 80 },
-  { skill_name: "Next.js 14", image: "next.png", width: 80, height: 80 },
-  { skill_name: "TypeScript", image: "ts.png", width: 80, height: 80 },
-  { skill_name: "Node.js", image: "node.png", width: 80, height: 80 },
-  { skill_name: "Express.js", image: "express.png", width: 80, height: 80 },
-  { skill_name: "MongoDB", image: "mongodb.png", width: 40, height: 40 },
-  { skill_name: "PostgreSQL", image: "postgresql.png", width: 70, height: 70 },
-  { skill_name: "Tailwind CSS", image: "tailwind.png", width: 80, height: 80 },
-] as const;
+// Cleaned up skills data - custom responsive vector grid configured directly in Skills component for real-time brand logo loading.
 
 export const SOCIALS = [
   { name: "GitHub", icon: RxGithubLogo, link: "https://github.com/abhishek01y" },
   { name: "LinkedIn", icon: RxLinkedinLogo, link: "https://www.linkedin.com/in/abhishek01y/" },
   { name: "Instagram", icon: RxInstagramLogo, link: "https://www.instagram.com/_abhi_unfiltered_/" },
-] as const;
-
-export const FRONTEND_SKILL = [
-  { skill_name: "React.js", image: "react.png", width: 80, height: 80 },
-  { skill_name: "Next.js 14", image: "next.png", width: 80, height: 80 },
-  { skill_name: "TypeScript", image: "ts.png", width: 80, height: 80 },
-  { skill_name: "JavaScript ES6+", image: "js.png", width: 65, height: 65 },
-  { skill_name: "Tailwind CSS", image: "tailwind.png", width: 80, height: 80 },
-] as const;
-
-export const BACKEND_SKILL = [
-  { skill_name: "Node.js", image: "node.png", width: 80, height: 80 },
-  { skill_name: "Express.js", image: "express.png", width: 80, height: 80 },
-  // Placeholder images used for Spring Boot, FastAPI, Flask - replace in /public/skills/
-  { skill_name: "Spring Boot", image: "node.png", width: 80, height: 80 },
-  { skill_name: "FastAPI", image: "go.png", width: 60, height: 60 },
-  { skill_name: "Flask", image: "go.png", width: 60, height: 60 },
-] as const;
-
-export const FULLSTACK_SKILL = [
-  { skill_name: "MongoDB Atlas", image: "mongodb.png", width: 40, height: 40 },
-  { skill_name: "PostgreSQL", image: "postgresql.png", width: 70, height: 70 },
-  { skill_name: "Supabase", image: "firebase.png", width: 55, height: 55 },
-  { skill_name: "SQLite", image: "mysql.png", width: 70, height: 70 },
-] as const;
-
-export const OTHER_SKILL = [
-  { skill_name: "Java", image: "ts.png", width: 80, height: 80 },
-  { skill_name: "Python", image: "ts.png", width: 80, height: 80 },
-  { skill_name: "C++", image: "ts.png", width: 80, height: 80 },
-  { skill_name: "Git & GitHub", image: "go.png", width: 60, height: 60 },
 ] as const;
 
 export const PROJECTS = [
