@@ -4,10 +4,11 @@ import {
   Points,
   PointMaterial,
   type PointsInstancesProps,
+  Trail,
 } from "@react-three/drei";
 import { Canvas, useFrame } from "@react-three/fiber";
 import { useMemo, useRef, Suspense, useState } from "react";
-import type { Points as PointsType, Mesh as MeshType } from "three";
+import type { Points as PointsType } from "three";
 import * as THREE from "three";
 
 const createStarField = (count: number, radius: number) => {
@@ -75,21 +76,21 @@ export const StarBackground = (props: PointsInstancesProps) => {
   );
 };
 
-export const ShootingStar = ({ color = "#ffffff" }) => {
-  const [star, setStar] = useState(() => resetStar());
+export const Comet = ({ color = "#ffffff" }) => {
+  const [comet, setComet] = useState(() => resetComet());
 
-  function resetStar() {
-    const angle = Math.PI * 1.25 + (Math.random() - 0.5) * 0.4; // Diagonal down-left trajectory
-    const length = 3.5 + Math.random() * 2.0;
+  function resetComet() {
+    const angle = Math.PI * 1.25 + (Math.random() - 0.5) * 0.3; // Elegant diagonal trajectory
+    const length = 4.5 + Math.random() * 2.0;
     
-    // Spread starting coordinates
-    const startX = 1.0 + Math.random() * 2.0;
-    const startY = 1.0 + Math.random() * 2.0;
+    // Starting positions (spread off-screen)
+    const startX = 1.2 + Math.random() * 1.8;
+    const startY = 1.2 + Math.random() * 1.8;
     const startZ = -0.5 + Math.random() * 1.0;
     
-    const speed = 0.6 + Math.random() * 0.9;
-    const size = 0.002 + Math.random() * 0.003;
-    const delay = Math.random() * 10; // Sparkle timing delay
+    const speed = 0.35 + Math.random() * 0.55; // Slower, majestic orbital velocity
+    const size = 0.003 + Math.random() * 0.004;
+    const delay = Math.random() * 15 + 5; // Comets are rare and special! (5-20s spawn spacing)
 
     return {
       startX,
@@ -99,60 +100,66 @@ export const ShootingStar = ({ color = "#ffffff" }) => {
       dy: Math.sin(angle) * length,
       speed,
       size,
-      angle,
       progress: -delay,
     };
   }
 
   useFrame((_state, delta) => {
-    setStar((prev) => {
+    setComet((prev) => {
       const nextProgress = prev.progress + delta * prev.speed;
       if (nextProgress > 1.0) {
-        return resetStar();
+        return resetComet();
       }
       return { ...prev, progress: nextProgress };
     });
   });
 
   const { currentPos, opacity } = useMemo(() => {
-    if (star.progress < 0) {
+    if (comet.progress < 0) {
       return { currentPos: new THREE.Vector3(999, 999, 999), opacity: 0 };
     }
 
-    const x = star.startX + star.dx * star.progress;
-    const y = star.startY + star.dy * star.progress;
-    const z = star.startZ;
+    const x = comet.startX + comet.dx * comet.progress;
+    const y = comet.startY + comet.dy * comet.progress;
+    const z = comet.startZ;
 
-    // Organic fade-in and fade-out envelope
+    // Fluid fade-in and fade-out envelope
     let op = 0;
-    if (star.progress < 0.2) {
-      op = star.progress / 0.2; // Fade-in
-    } else if (star.progress > 0.8) {
-      op = (1.0 - star.progress) / 0.2; // Fade-out
+    if (comet.progress < 0.15) {
+      op = comet.progress / 0.15;
+    } else if (comet.progress > 0.85) {
+      op = (1.0 - comet.progress) / 0.15;
     } else {
       op = 1.0;
     }
 
     return {
       currentPos: new THREE.Vector3(x, y, z),
-      opacity: op * 0.7,
+      opacity: op,
     };
-  }, [star]);
+  }, [comet]);
+
+  if (comet.progress < 0) return null;
 
   return (
-    <mesh 
-      position={currentPos} 
-      rotation={[0, 0, star.angle + Math.PI / 2]}
+    <Trail
+      width={0.6}
+      length={10}
+      color={color}
+      attenuation={(t) => t * t} // Tapered volumetric trail fade
     >
-      {/* Elongated cylinder creates a highly realistic visual light trail */}
-      <cylinderGeometry args={[0, star.size, 0.25, 6]} />
-      <meshBasicMaterial 
-        color={color} 
-        transparent 
-        opacity={opacity} 
-        blending={THREE.AdditiveBlending}
-      />
-    </mesh>
+      <mesh position={currentPos}>
+        <sphereGeometry args={[comet.size, 8, 8]} />
+        <meshBasicMaterial 
+          color={color} 
+          transparent 
+          opacity={opacity * 0.8} 
+          blending={THREE.AdditiveBlending}
+        />
+        {/* Soft atmospheric glow light */}
+        <pointLight color={color} intensity={1.5} distance={1.0} />
+      </mesh>
+    </Trail>
   );
 };
 
@@ -173,12 +180,10 @@ export const StarsCanvas = () => (
       <Suspense fallback={null}>
         <NebulaCloud />
         <StarBackground />
-        <ShootingStar color="#ffffff" />
-        <ShootingStar color="#b49bff" />
-        <ShootingStar color="#e59cff" />
-        <ShootingStar color="#ffffff" />
-        <ShootingStar color="#7042f8" />
-        <ShootingStar color="#b49bff" />
+        <Comet color="#ffffff" />
+        <Comet color="#b49bff" />
+        <Comet color="#e59cff" />
+        <Comet color="#ffffff" />
       </Suspense>
     </Canvas>
   </div>
